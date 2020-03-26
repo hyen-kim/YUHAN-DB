@@ -1,0 +1,154 @@
+
+==========================================================
+
+DB 응용 : 2주차 
+
+==========================================================
+
+예제1) emp 테이블에서 부서번호, 사원이름, 상사의 사원번호를 검색하여라.
+
+SQL> select deptno, ename, mgr
+  2  from emp
+  3  ;
+
+    DEPTNO ENAME             MGR
+---------- ---------- ----------
+        20 SMITH            7902
+        30 ALLEN            7698
+        30 WARD             7698
+        20 JONES            7839
+        30 MARTIN           7698
+        30 BLAKE            7839
+        10 CLARK            7839
+        20 SCOTT            7566
+        10 KING
+        30 TURNER           7698
+        20 ADAMS            7788
+
+    DEPTNO ENAME             MGR
+---------- ---------- ----------
+        30 JAMES            7698
+        20 FORD             7566
+        10 MILLER           7782
+
+14 개의 행이 선택되었습니다.
+
+예제1-1) 환경변수 설정 (SQL*PLUS)
+             한페이지 안에 24개의 줄 출력
+
+SQL> set PageS 24
+SQL> select deptno, ename, mgr
+  2  from emp;
+
+    DEPTNO ENAME             MGR
+---------- ---------- ----------
+        20 SMITH            7902
+        30 ALLEN            7698
+        30 WARD             7698
+        20 JONES            7839
+        30 MARTIN           7698
+        30 BLAKE            7839
+        10 CLARK            7839
+        20 SCOTT            7566
+        10 KING
+        30 TURNER           7698
+        20 ADAMS            7788
+        30 JAMES            7698
+        20 FORD             7566
+        10 MILLER           7782
+
+14 개의 행이 선택되었습니다.
+
+
+
+예제2) emp 테이블의 모든 내용을 검색하여라.
+SQL> select *
+  2  from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM
+---------- ---------- --------- ---------- -------- ---------- ----------
+    DEPTNO
+----------
+      7369 SMITH      CLERK           7902 80/12/17        800
+        20
+
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300
+        30
+
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500
+        30
+
+      7566 JONES      MANAGER         7839 81/04/02       2975
+        20
+
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400
+        30
+
+      7698 BLAKE      MANAGER         7839 81/05/01       2850
+        30
+
+      7782 CLARK      MANAGER         7839 81/06/09       2450
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM
+---------- ---------- --------- ---------- -------- ---------- ----------
+    DEPTNO
+----------
+        10
+
+      7788 SCOTT      ANALYST         7566 87/04/19       3000
+        20
+
+      7839 KING       PRESIDENT            81/11/17       5000
+        10
+
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0
+        30
+
+      7876 ADAMS      CLERK           7788 87/05/23       1100
+        20
+
+      7900 JAMES      CLERK           7698 81/12/03        950
+        30
+
+      7902 FORD       ANALYST         7566 81/12/03       3000
+        20
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM
+---------- ---------- --------- ---------- -------- ---------- ----------
+    DEPTNO
+----------
+
+      7934 MILLER     CLERK           7782 82/01/23       1300
+        10
+
+14 개의 행이 선택되었습니다.
+
+예제2-1) 환경변수 설정 (SQL*PLUS)
+         한 줄에 120개의 문자 수 출력
+SQL> set lines 120
+SQL> select *
+  2  from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 80/12/17        800                    20
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300         30
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500         30
+      7566 JONES      MANAGER         7839 81/04/02       2975                    20
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400         30
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                    30
+      7782 CLARK      MANAGER         7839 81/06/09       2450                    10
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                    20
+      7839 KING       PRESIDENT            81/11/17       5000                    10
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0         30
+      7876 ADAMS      CLERK           7788 87/05/23       1100                    20
+      7900 JAMES      CLERK           7698 81/12/03        950                    30
+      7902 FORD       ANALYST         7566 81/12/03       3000                    20
+      7934 MILLER     CLERK           7782 82/01/23       1300                    10
+
+14 개의 행이 선택되었습니다.
+
+
+
+
+
