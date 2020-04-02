@@ -1,0 +1,301 @@
+==========================================================
+
+DB 응용 : 3주차 
+1. 실습 풀이
+2. WHERE 절의 SQL 연산자
+3. ORDER BY절
+
+==========================================================
+
+1. 실습풀이
+ 
+< SQL 구문 편하게 수정하는 법	=> 세미콜론 없이 >
+SQL> ed	
+편집기가 나타나면 수정을 하면 된다.
+편집을 한 후 저장한 후 창 닫기 => / 쓰고 엔터를 치면 결과를 보여줌
+*) SQL구문은 반드시 세미콜론을 찍어야하지만,
+   편집기에서는 / 가 대신하므로 세미콜론을 찍으면 안된다.
+   편집기를 사용하고 반드시 저장을 시키고 종료를 해야만 SQL로 돌아올 수 있음
+
+
+
+2. WHERE 절의 SQL 연산자
+
+예제1) emp 테이블에서 입사일이 1981년 5월 9일과 1981년 12월 17일 사이의 사원의 이름을 검색하여라.
+
+SQL> select ename
+  2  from emp
+  3  where hiredate BETWEEN '1981/05/09' AND '1981/12/17';
+
+ENAME
+----------
+MARTIN
+CLARK
+KING
+TURNER
+JAMES
+FORD
+
+6 개의 행이 선택되었습니다.
+
+
+예제2)emp 테이블에서 부서 번호가 10이나 30인 사원의 이름, 직무, 부서번호를 검색하여라.
+
+SQL> select ename, job, deptno
+  2  from emp
+  3  where deptno IN(10,30);
+
+ENAME      JOB           DEPTNO
+---------- --------- ----------
+ALLEN      SALESMAN          30
+WARD       SALESMAN          30
+MARTIN     SALESMAN          30
+BLAKE      MANAGER           30
+CLARK      MANAGER           10
+KING       PRESIDENT         10
+TURNER     SALESMAN          30
+JAMES      CLERK             30
+MILLER     CLERK             10
+
+9 개의 행이 선택되었습니다.
+
+
+예제3) emp 테이블에서 'M'으로 시작하는 이름을 가진 사원들을 검색하여라.
+
+SQL> select ename
+  2  from emp
+  3  where ename like 'M%';
+
+ENAME
+----------
+MARTIN
+MILLER
+
+
+
+예제4) emp 테이블에서 두 번째 글자가 'L'인 이름을 가진 사원들을 검색하여라.
+
+SQL> select ename
+  2  from emp
+  3  where ename like '_L%';
+ 
+ENAME
+----------
+ALLEN
+BLAKE
+CLARK
+
+
+예제5) dept 테이블에서 부서 이름에 대문자 'S'를 포함하는 모든 데이터를 검색하여라.
+
+SQL> select *
+  2  from dept
+  3  where dname like '%S%';
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+
+
+예제6) emp 테이블에서 커미션이 NULL 값을 갖는 사원의 이름, 직무, 급여를 검색하여라.
+
+SQL> select ename, job, sal
+  2  from emp
+  3  where comm is null;
+
+ENAME      JOB              SAL
+---------- --------- ----------
+SMITH      CLERK            800
+JONES      MANAGER         2975
+BLAKE      MANAGER         2850
+CLARK      MANAGER         2450
+SCOTT      ANALYST         3000
+KING       PRESIDENT       5000
+ADAMS      CLERK           1100
+JAMES      CLERK            950
+FORD       ANALYST         3000
+MILLER     CLERK           1300
+
+10 개의 행이 선택되었습니다.
+
+
+예제7) emp 테이블에서 커미션이 null 아닌 값을 갖는 사원의 이름, 직무, 급여를 검색하여라.
+
+SQL> select ename, job, sal
+  2  from emp
+  3  where comm is not null;
+
+ENAME      JOB              SAL
+---------- --------- ----------
+ALLEN      SALESMAN        1600
+WARD       SALESMAN        1250
+MARTIN     SALESMAN        1250
+TURNER     SALESMAN        1500
+
+
+예제8) emp 테이블에서 급여가 1000 이상이면서 부서 번호가 30인 사원, 또는
+       부서 번호가 20인 사원들을 검색하여라.
+
+SQL> select ename
+  2  from emp
+  3  where sal >= 1000 and
+  4  deptno = 30 or
+  5  deptno = 20 ;
+
+ENAME
+----------
+SMITH
+ALLEN
+WARD
+JONES
+MARTIN
+BLAKE
+SCOTT
+TURNER
+ADAMS
+FORD
+
+10 개의 행이 선택되었습니다.
+
+
+예제9) emp 테이블에서 급여가 1000 이상이면서
+       동시에 부서 번호가 30이거나 부서 번호가 20인 사원들을 검색하여라.
+
+SQL> select ename
+  2  from emp
+  3  where sal >= 1000 and
+  4  (deptno = 30 or deptno = 20);
+
+ENAME
+----------
+ALLEN
+WARD
+JONES
+MARTIN
+BLAKE
+SCOTT
+TURNER
+ADAMS
+FORD
+
+9 개의 행이 선택되었습니다.
+
+
+
+3. 데이터를 정렬한 SELECT문 : ORDER BY절
+
+예제1) emp 테이블에서 사원의 이름, 부서 번호, 입사일을 검색해서 입사일에 대해 
+       내림차순으로 정렬하여 출력하여라.
+
+SQL> select ename, deptno, hiredate
+  2  from emp
+  3  order by hiredate desc;
+
+ENAME          DEPTNO HIREDATE
+---------- ---------- --------
+ADAMS              20 87/05/23
+SCOTT              20 87/04/19
+MILLER             10 82/01/23
+FORD               20 81/12/03
+JAMES              30 81/12/03
+KING               10 81/11/17
+MARTIN             30 81/09/28
+TURNER             30 81/09/08
+CLARK              10 81/06/09
+BLAKE              30 81/05/01
+JONES              20 81/04/02
+WARD               30 81/02/22
+ALLEN              30 81/02/20
+SMITH              20 80/12/17
+
+14 개의 행이 선택되었습니다.
+
+
+예제2) emp 테이블에서 사원의 이름, 부서 번호, 급여를 검색해서 부서 번호에 대해 
+       오름차순으로 급여에 대해 내림차순으로 정렬하여 출력하여라.
+
+SQL> select ename, deptno, sal
+  2  from emp
+  3  order by deptno, sal desc;
+
+ENAME          DEPTNO        SAL
+---------- ---------- ----------
+KING               10       5000
+CLARK              10       2450
+MILLER             10       1300
+SCOTT              20       3000
+FORD               20       3000
+JONES              20       2975
+ADAMS              20       1100
+SMITH              20        800
+BLAKE              30       2850
+ALLEN              30       1600
+TURNER             30       1500
+MARTIN             30       1250
+WARD               30       1250
+JAMES              30        950
+
+14 개의 행이 선택되었습니다.
+
+
+예제3) emp 테이블에서 사원의 이름, 일년 급여(sal*12)를 검색해서 일년 급여에 대해
+       오름차순으로 정렬하여 출력하여라.
+
+SQL> select ename, sal*12
+  2  from emp
+  3  order by sal*12;
+
+ENAME          SAL*12
+---------- ----------
+SMITH            9600
+JAMES           11400
+ADAMS           13200
+WARD            15000
+MARTIN          15000
+MILLER          15600
+TURNER          18000
+ALLEN           19200
+CLARK           29400
+BLAKE           34200
+JONES           35700
+SCOTT           36000
+FORD            36000
+KING            60000
+
+14 개의 행이 선택되었습니다.
+
+
+예제4) emp 테이블에서 사원의 이름, 일년 급여를 검색해서 일년 급여에 대해
+       오름차순으로 정렬하여 출력하여라.
+
+SQL> select ename, sal*12
+  2  from emp
+  3  order by 2;
+
+ENAME          SAL*12
+---------- ----------
+SMITH            9600
+JAMES           11400
+ADAMS           13200
+WARD            15000
+MARTIN          15000
+MILLER          15600
+TURNER          18000
+ALLEN           19200
+CLARK           29400
+BLAKE           34200
+JONES           35700
+SCOTT           36000
+FORD            36000
+KING            60000
+
+14 개의 행이 선택되었습니다.
+
+
+
+
+
+
+
