@@ -174,12 +174,25 @@ SQL> select empno, ename
 11) 사원번호가 7654와 7782 사이 이외의 사원의 모든 정보를 출력하여라.	<-- 틀림
 SQL> select *
   2  from emp
-  3  where empno > 7654 AND empno < 7782;
+  3  where NOT (empno > 7654 AND empno < 7782);
 
      EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
 ---------- ---------- --------- ---------- -------- ---------- ---------- ----------
-      7698 BLAKE      MANAGER         7839 81/05/01       2850                    30
+      7369 SMITH      CLERK           7902 80/12/17        800                    20
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300         30
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500         30
+      7566 JONES      MANAGER         7839 81/04/02       2975                    20
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400         30
+      7782 CLARK      MANAGER         7839 81/06/09       2450                    10
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                    20
+      7839 KING       PRESIDENT            81/11/17       5000                    10
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0         30
+      7876 ADAMS      CLERK           7788 87/05/23       1100                    20
+      7900 JAMES      CLERK           7698 81/12/03        950                    30
+      7902 FORD       ANALYST         7566 81/12/03       3000                    20
+      7934 MILLER     CLERK           7782 82/01/23       1300                    10
 
+13 개의 행이 선택되었습니다.
 
 12) 부서가 30번이고 급여가 1500 이상인 사원의 이름, 부서, 급여를 출력하여라.
 SQL> select ename, deptno, sal
