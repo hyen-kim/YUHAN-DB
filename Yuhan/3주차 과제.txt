@@ -104,19 +104,13 @@ SQL> select *
 7)이름의 처음 글자는 관계없고 두 번째 글자가 A인 사원의 모든 정보를 출력하여라. 
 SQL> select *
   2  from emp
-  3  where ename like '%A%';
+  3  where ename like '_A%';
 
      EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
 ---------- ---------- --------- ---------- -------- ---------- ---------- ----------
-      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300         30
       7521 WARD       SALESMAN        7698 81/02/22       1250        500         30
       7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400         30
-      7698 BLAKE      MANAGER         7839 81/05/01       2850                    30
-      7782 CLARK      MANAGER         7839 81/06/09       2450                    10
-      7876 ADAMS      CLERK           7788 87/05/23       1100                    20
       7900 JAMES      CLERK           7698 81/12/03        950                    30
-
-7 개의 행이 선택되었습니다.
 
 
 8)커미션이 NULL이 아닌 사원의 모든 정보를 출력하여라. 
@@ -180,16 +174,16 @@ SQL> select *
 
 11)부서번호가 10인 사원의 사원번호, 이름, 급여, 커미션을 
    커미션에 대해 오름차순으로 정렬한후 사원번호에 대해 내림치순으로 정렬하여라.
-SQL> select empno, ename, comm
+SQL> select empno, ename, sal, comm
   2  from emp
   3  where deptno in(10)
-  4  order by comm , empno desc;
+  4  order by comm, empno desc;
 
-     EMPNO ENAME            COMM
----------- ---------- ----------
-      7934 MILLER
-      7839 KING
-      7782 CLARK
+     EMPNO ENAME             SAL       COMM
+---------- ---------- ---------- ----------
+      7934 MILLER           1300
+      7839 KING             5000
+      7782 CLARK            2450
 
 
 12)사원의 모든 정보를 부서 번호에 대해 오름차순으로 정렬한 후 
