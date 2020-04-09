@@ -1,0 +1,204 @@
+==========================================================
+
+DB 응용 : 4주차 
+1. 단일행 함수
+	- 문자 함수
+	- 숫자 함수
+	- 날짜 함수
+
+==========================================================
+
+1. 함수의 정의
+- 함수란 하나 이상의 매개변수를 전달받아 처리해서 그 결과를 반환해주는 프로그램
+- 내장함수, 사용자 정의 함수가 있음
+- 내장함수는 오라클에서 제공되며 별도의 프로그램없이 사용 가능
+
+4주차에 배울 함수는 ' 단일행 함수 ' => 문자, 숫자, 날짜가 다 올 수 있음
+- 함수가 정의된 SQL 문이 실행될 때 각각의 행에 대해 수행되며, 행 당 한개의 결과를 반환
+- 인수로는 상수, 변수, 표현식등
+- 함수를 중첩하여 사용할 수 있음
+- SELETE, WHERE, ORDER BY 절에서 사용가능
+- FROM절에서는 사용할 수 없음
+
+
+< 문자함수 >
+- 문자열을 인수로 받아들여 실행
+- 결과로 문자열이나 숫자를 반환
+- 문자열의 데이터는 반드시 단일 인용부호와 함께 사용 
+- 칼럼명을 인수로 사용할 경우에는 단일 인용부호 없이 사용
+
+1. lower 함수 : 소문자로 변환
+2. upper 함수 : 대문자로 변환
+3. initcap 함수 : 첫번째문자만대문자 ex) oracle example -> Oracle Example
+4. concat 함수 : 두 개의 문자열 연결
+5. substr, substrb 함수 : 명시된 위치부터 명시된 길이만큼 결과 표시
+	-> 칼람명,명시된위치,명시된길이
+6. length, lengthb 함수 : 문자열의 길이를 숫자로 반환
+	-> 칼럼명
+7. instr, instrb 함수 : 명시된 문자열의 위치를 찾아 숫자로 결과 표시
+	-> 컬럼명, 찾고자하는문자
+
+< 숫자함수 >
+- 숫자를 결과를 나타냄
+
+1. round 함수 : 반올림
+2. trunc 함수 : 절삭
+3. mod 함수 : 나머지 수
+4. floor 함수 : 명시된 함수보다 작거나 같은
+5. ceil 함수 : 명시된 함수보다 크거나 같은
+
+
+< 날짜함수 > 
+- 날짜를 인수로 받아들여 실행, 결과로 날짜나 숫자
+- 현재의 날짜를 결과로 반환하는 함수인 SYSDATE를 사용
+
+1. months_between 함수 : 날짜1-날짜2 사이의 달수를 숫자로 나타냄
+2. add_months 함수 : 날짜 , 달 을 더함
+3. next_day 함수 : 날짜, 요일 의 다음 요일의 날짜를 구함
+4. last_day 함수 : 날짜 -> 달의 마지막 날짜를 찾음
+5. round 함수 
+6. trunc 함수 
+
+
+
+
+[ 실습 ]
+
+예제1) ORACLE Example을 소문자로 변환시켜라.
+
+SQL> select lower('ORACLE Example')
+  2  from dual;
+
+LOWER('ORACLEE
+--------------
+oracle example
+
+
+예제2) emp 테이블에서 사원의 이름과 직무를 검색해서 직무는 소문자로 변환하여 출력하여라.
+
+SQL> select ename, job, lower(job)
+  2  from emp;
+
+ENAME      JOB       LOWER(JOB
+---------- --------- ---------
+SMITH      CLERK     clerk
+ALLEN      SALESMAN  salesman
+WARD       SALESMAN  salesman
+JONES      MANAGER   manager
+MARTIN     SALESMAN  salesman
+BLAKE      MANAGER   manager
+CLARK      MANAGER   manager
+SCOTT      ANALYST   analyst
+KING       PRESIDENT president
+TURNER     SALESMAN  salesman
+ADAMS      CLERK     clerk
+JAMES      CLERK     clerk
+FORD       ANALYST   analyst
+MILLER     CLERK     clerk
+
+14 개의 행이 선택되었습니다.
+
+
+예제3) ORACLE Example을 대문자로 변환시켜라.
+
+SQL> select upper('ORACLE Example')
+  2  from dual;
+
+UPPER('ORACLEE
+--------------
+ORACLE EXAMPLE
+
+
+예제4) emp 테이블에서 직무가 대문자 'salesman'과 같은 사원의 사원 번호와 이름을 검색하여라.
+
+SQL> select empno, ename
+  2  from emp
+  3  where job =  upper('salesman');
+
+     EMPNO ENAME
+---------- ----------
+      7499 ALLEN
+      7521 WARD
+      7654 MARTIN
+      7844 TURNER
+
+
+예제5) ORACLE Example을 단어의 첫 글자만 대문자로, 다른 문자는 소문자로 변환시켜라.
+
+SQL> select initcap('ORACLE Example')
+  2  from dual;
+
+INITCAP('ORACL
+--------------
+Oracle Example
+
+
+예제6) emp 테이블에서 사원의 이름과 직무를 검색해서 직무의 첫 글자만 대문자로 출력하여라.
+
+SQL> select ename, initcap(job)
+  2  from emp;
+
+ENAME      INITCAP(J
+---------- ---------
+SMITH      Clerk
+ALLEN      Salesman
+WARD       Salesman
+JONES      Manager
+MARTIN     Salesman
+BLAKE      Manager
+CLARK      Manager
+SCOTT      Analyst
+KING       President
+TURNER     Salesman
+ADAMS      Clerk
+JAMES      Clerk
+FORD       Analyst
+MILLER     Clerk
+
+14 개의 행이 선택되었습니다.
+
+
+예제7) Oracle 과 Example를 결합시켜라.
+
+SQL> select concat('Oracle','Example')
+  2  from dual;
+
+CONCAT('ORACL
+-------------
+OracleExample
+
+
+예제8) emp 테이블에서 부서 번호가 10인 사원들의 사원 번호와 이름을 결합하여 출력하여라.
+
+SQL> select concat(empno,ename) "사원"
+  2  from emp
+  3  where deptno in(10);
+
+사원
+--------------------------------------------------
+7782CLARK
+7839KING
+7934MILLER
+
+
+예제9) 명시된 Oracle의 두 번째 문자부터 3개의 문자를 출력하여라.
+
+SQL> select substr('Oracle',2,3)
+  2  from dual;
+
+SUB
+---
+rac
+
+
+예제10) emp 테이블에서 사원 이름의 앞 세글자가 SCO인 사원의 사원 번호, 이름을 출력하여라.
+
+SQL> select empno, ename
+  2  from emp
+  3  where substr(ename,1,3)=upper('sco');
+
+     EMPNO ENAME
+---------- ----------
+      7788 SCOTT
+
+
