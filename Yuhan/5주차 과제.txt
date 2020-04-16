@@ -1,0 +1,261 @@
+
+========================================================================================================
+
+						DB 응용
+										학번 : 201907033
+										이름 : 김혜인
+										제출일 : 20/04/16
+
+========================================================================================================
+*** EMP 테이블 사용*** 
+
+1. 모든 사원의 이름, 급여, 커미션, 총액(급여+커미션)을 구하여 총액이 많은 순서로 출력하여라. 
+(단, 커미션이 null 인 사원도 0으로 해서 포함하여라.)
+SQL> select ename, sal, comm, sal+nvl(comm,0) total
+  2  from emp
+  3  order by total desc;
+
+ENAME             SAL       COMM      TOTAL
+---------- ---------- ---------- ----------
+KING             5000                  5000
+FORD             3000                  3000
+SCOTT            3000                  3000
+JONES            2975                  2975
+BLAKE            2850                  2850
+MARTIN           1250       1400       2650
+CLARK            2450                  2450
+ALLEN            1600        300       1900
+WARD             1250        500       1750
+TURNER           1500          0       1500
+MILLER           1300                  1300
+ADAMS            1100                  1100
+JAMES             950                   950
+SMITH             800                   800
+
+14 개의 행이 선택되었습니다.
+
+
+2. 직무가 ‘CLERK’인 사원들의 사원 번호, 이름, 급여를 표시하여라. 
+(단, 급여는 1000 단위마다 콤마(,)를 찍고 앞에는 국가별 화폐 단위를 붙여 표시하여라.)
+SQL> select empno, ename, to_char(sal,'L999,999') sal
+  2  from emp;
+
+     EMPNO ENAME      SAL
+---------- ---------- ------------------
+      7369 SMITH                   ￦800
+      7499 ALLEN                 ￦1,600
+      7521 WARD                  ￦1,250
+      7566 JONES                 ￦2,975
+      7654 MARTIN                ￦1,250
+      7698 BLAKE                 ￦2,850
+      7782 CLARK                 ￦2,450
+      7788 SCOTT                 ￦3,000
+      7839 KING                  ￦5,000
+      7844 TURNER                ￦1,500
+      7876 ADAMS                 ￦1,100
+      7900 JAMES                   ￦950
+      7902 FORD                  ￦3,000
+      7934 MILLER                ￦1,300
+
+14 개의 행이 선택되었습니다.
+
+
+3. 사원들의 사원 번호와 급여, 커미션, 연봉((comm+sal)*12)을 연봉이 많은 순서로 출력하여라.
+(단, 커미션이 null인 사원도 0으로 계산하여라.)
+SQL> select empno, sal, comm, ((nvl(comm,0)+sal)*12) total
+  2  from emp
+  3  order by total desc;
+
+     EMPNO        SAL       COMM      TOTAL
+---------- ---------- ---------- ----------
+      7839       5000                 60000
+      7902       3000                 36000
+      7788       3000                 36000
+      7566       2975                 35700
+      7698       2850                 34200
+      7654       1250       1400      31800
+      7782       2450                 29400
+      7499       1600        300      22800
+      7521       1250        500      21000
+      7844       1500          0      18000
+      7934       1300                 15600
+      7876       1100                 13200
+      7900        950                 11400
+      7369        800                  9600
+
+14 개의 행이 선택되었습니다.
+
+
+4. 모든 사원에 대해 사원들의 이름, 급여, 커미션을 급여가 적은 것부터 출력하여라. 
+(단, 커미션이 없는 사원은 ‘No Commission’이라는 말이 출력되게 하여라.)
+SQL> select ename, sal, nvl(to_char(comm), 'no commision' ) comm
+  2  from emp
+  3  order by sal;
+
+ENAME             SAL COMM
+---------- ---------- ----------------------------------------
+SMITH             800 no commision
+JAMES             950 no commision
+ADAMS            1100 no commision
+WARD             1250 500
+MARTIN           1250 1400
+MILLER           1300 no commision
+TURNER           1500 0
+ALLEN            1600 300
+CLARK            2450 no commision
+BLAKE            2850 no commision
+JONES            2975 no commision
+SCOTT            3000 no commision
+FORD             3000 no commision
+KING             5000 no commision
+
+14 개의 행이 선택되었습니다.
+
+
+5. ‘CLERK'은 20%, ’SALESMAN'은 15%, ‘ANALYST'는 10%, ’
+MANAGER'는 5%,‘PRESIDENT'는 0%와 같이 업무에 따라 급여 인상을 다르게 할 경우, 
+모든 사원들의 이름, 직무, 급여, 인상 후의 급여를 출력하여라. 
+SQL> select ename, job, sal, sal + sal * (case job
+  2  when 'CLERK' then 0.2
+  3  when 'SALESMAN' then 0.15
+  4  when 'ANALYST' then 0.1
+  5  when 'MANAGER' then 0.5
+  6  when 'PRESIDENT' then 0 END) as "인상후 급여"
+  7  from emp;
+
+ENAME      JOB              SAL 인상후 급여
+---------- --------- ---------- -----------
+SMITH      CLERK            800         960
+ALLEN      SALESMAN        1600        1840
+WARD       SALESMAN        1250      1437.5
+JONES      MANAGER         2975      4462.5
+MARTIN     SALESMAN        1250      1437.5
+BLAKE      MANAGER         2850        4275
+CLARK      MANAGER         2450        3675
+SCOTT      ANALYST         3000        3300
+KING       PRESIDENT       5000        5000
+TURNER     SALESMAN        1500        1725
+ADAMS      CLERK           1100        1320
+JAMES      CLERK            950        1140
+FORD       ANALYST         3000        3300
+MILLER     CLERK           1300        1560
+
+14 개의 행이 선택되었습니다.
+
+
+6. 모든 사원들의 입사한 년도와 입사한 달을 출력하여라. 
+SQL> select to_char(hiredate,'yyyy') year, to_char(hiredate,'month') month
+  2  from emp;
+
+YEAR MONTH
+---- ------
+1980 12월
+1981 2월
+1981 2월
+1981 4월
+1981 9월
+1981 5월
+1981 6월
+1987 4월
+1981 11월
+1981 9월
+1987 5월
+1981 12월
+1981 12월
+1982 1월
+
+14 개의 행이 선택되었습니다.
+
+
+7.10번 부서에 대해 급여의 평균 값, 최대 값, 최소 값, 인원수를 구하여 출력하여라. 
+SQL> select avg(sal) avg, max(sal) max, min(sal) min, count(sal) count
+  2  from emp
+  3  where deptno = 10;
+
+       AVG        MAX        MIN      COUNT
+---------- ---------- ---------- ----------
+2916.66667       5000       1300          3
+
+
+8.각 부서별 같은 직무를 갖는 사원의 인원수를 구하여 부서 번호, 직무, 인원수를 출력하여라. 
+SQL> select deptno, job, count(job) count
+  2  from emp
+  3  group by deptno, job;
+
+    DEPTNO JOB            COUNT
+---------- --------- ----------
+        20 CLERK              2
+        30 SALESMAN           4
+        20 MANAGER            1
+        30 CLERK              1
+        10 PRESIDENT          1
+        30 MANAGER            1
+        10 CLERK              1
+        10 MANAGER            1
+        20 ANALYST            2
+
+9 개의 행이 선택되었습니다.
+
+
+9.사원들의 직무별 평균급여와 최고급여, 최저급여를 평균급여에 대해 오름차순으로 정렬하여라. 
+SQL> select job, avg(sal) avg, max(sal) max, min(sal) min
+  2  from emp
+  3  group by job
+  4  order by avg;
+
+JOB              AVG        MAX        MIN
+--------- ---------- ---------- ----------
+CLERK         1037.5       1300        800
+SALESMAN        1400       1600       1250
+MANAGER   2758.33333       2975       2450
+ANALYST         3000       3000       3000
+PRESIDENT       5000       5000       5000
+
+
+
+10. 사원이름의 두 번째 글자가 'A'인 사원들의 수를 출력하여라. 
+SQL> select count(ename) ename
+  2  from emp
+  3  where ename like '_A%';
+
+     ENAME
+----------
+         3
+
+
+
+11. 사원들의 평균 급여, 총 급여, 최고 급여액, 최저 급여액을 구하여라. 
+SQL> select avg(sal), sum(sal), max(sal), min(sal)
+  2  from emp;
+
+  AVG(SAL)   SUM(SAL)   MAX(SAL)   MIN(SAL)
+---------- ---------- ---------- ----------
+2073.21429      29025       5000        800
+
+
+
+12. 평균 급여가 1500이 넘는 직무와 평균 급여를 구하여라. 
+SQL> select job, avg(sal)
+  2  from emp
+  3  group by job
+  4  having avg(sal) >= 1500;
+
+JOB         AVG(SAL)
+--------- ----------
+PRESIDENT       5000
+MANAGER   2758.33333
+ANALYST         3000
+
+
+
+13. 부서별 평균 급여가 2000보다 적은 부서 사원들의 부서번호를 출력하여라.
+SQL> select deptno
+  2  from emp
+  3  group by deptno
+  4  having avg(sal) < 2000;
+
+    DEPTNO
+----------
+        30
+
+
