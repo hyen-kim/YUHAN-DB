@@ -1,0 +1,226 @@
+
+========================================================================================================
+
+						DB 응용
+										학번 : 201907033
+										이름 : 김혜인
+										제출일 : 20/04/24
+
+========================================================================================================
+
+
+*** EMP 테이블, DEPT 테이블 사용 ***
+
+1 . EMP와 DEPT 테이블을 조인하여 모든 사원에 대해 부서 번호, 부서 이름,사원이름, 급여를 출력하여라.
+SQL> select e.deptno, d.dname, e.ename, e.sal
+  2  from emp e, dept d
+  3  where e.deptno = d.deptno;
+
+    DEPTNO DNAME          ENAME             SAL
+---------- -------------- ---------- ----------
+        10 ACCOUNTING     CLARK            2450
+        10 ACCOUNTING     KING             5000
+        10 ACCOUNTING     MILLER           1300
+        20 RESEARCH       JONES            2975
+        20 RESEARCH       FORD             3000
+        20 RESEARCH       ADAMS            1100
+        20 RESEARCH       SMITH             800
+        20 RESEARCH       SCOTT            3000
+        30 SALES          WARD             1250
+        30 SALES          TURNER           1500
+        30 SALES          ALLEN            1600
+
+    DEPTNO DNAME          ENAME             SAL
+---------- -------------- ---------- ----------
+        30 SALES          JAMES             950
+        30 SALES          BLAKE            2850
+        30 SALES          MARTIN           1250
+
+14 개의 행이 선택되었습니다.
+
+
+
+2 . 이름이 ‘ALLEN’인 사원의 부서 이름을 출력하여라.
+SQL> select d.dname
+  2  from emp e, dept d
+  3  where d.deptno = e.deptno and e.ename = 'ALLEN';
+
+DNAME
+--------------
+SALES
+
+
+3 . ‘ALLEN’과 직무가 같은 사원의 이름, 부서 이름, 급여, 부서 위치를 출력하여라.
+SQL> select e.ename, d.dname, e.sal, d.loc
+  2  from emp e, dept d
+  3  where d.deptno = e.deptno and e.job =
+  4  (select job
+  5  from emp
+  6  where ename = 'ALLEN');
+
+ENAME      DNAME                 SAL LOC
+---------- -------------- ---------- -------------
+ALLEN      SALES                1600 CHICAGO
+TURNER     SALES                1500 CHICAGO
+MARTIN     SALES                1250 CHICAGO
+WARD       SALES                1250 CHICAGO
+
+
+
+4 . 전체 사원의 평균 급여보다 급여가 많은 사원의 사원 번호, 이름, 부서 이름,입사일, 부서 위치, 급여를 출력하여라.
+SQL> select e.empno, e.ename, d.dname, e.hiredate, d.loc, e.sal
+  2  from emp e, dept d
+  3  where d.deptno = e.deptno and e.sal >
+  4  (select avg(sal)
+  5  from emp);
+
+
+     EMPNO ENAME      DNAME          HIREDATE LOC                  SAL
+---------- ---------- -------------- -------- ------------- ----------
+      7566 JONES      RESEARCH       81/04/02 DALLAS              2975
+      7698 BLAKE      SALES          81/05/01 CHICAGO             2850
+      7782 CLARK      ACCOUNTING     81/06/09 NEW YORK            2450
+      7788 SCOTT      RESEARCH       87/04/19 DALLAS              3000
+      7839 KING       ACCOUNTING     81/11/17 NEW YORK            5000
+      7902 FORD       RESEARCH       81/12/03 DALLAS              3000
+
+6 개의 행이 선택되었습니다.
+
+
+
+5 . 10번 부서 사원들 중에서 20번 부서의 사원과 같은 직무를 갖는 사원의 사원 번호,이름, 부서 이름, 입사일, 부서 위치를 출력하여라.
+SQL> select e.empno, e.ename, d.dname, e.hiredate, d.loc
+  2  from emp e, dept d
+  3  where d.deptno = e.deptno and e.deptno = 10 and e.job in (
+  4  select job
+  5  from emp
+  6  where deptno = 20);
+
+     EMPNO ENAME      DNAME          HIREDATE LOC
+---------- ---------- -------------- -------- -------------
+      7934 MILLER     ACCOUNTING     82/01/23 NEW YORK
+      7782 CLARK      ACCOUNTING     81/06/09 NEW YORK
+
+
+6 . ‘ALLEN’의 급여보다 많고 ‘SCOTT’의 급여보다 적은 사원의 사원 번호, 이름,부서 이름, 부서 위치, 급여를 급여가 많은 순으로 출력하여라.
+SQL> select e.empno, e.ename, d.dname, d.loc, e.sal
+  2  from emp e, dept d
+  3  where d.deptno = e.deptno and e.sal > (
+  4  select sal
+  5  from emp
+  6  where ename = 'ALLEN')
+  7  and e.sal < (
+  8  select sal
+  9  from emp
+ 10  where ename = 'SCOTT')
+ 11  order by e.sal desc;
+
+     EMPNO ENAME      DNAME          LOC                  SAL
+---------- ---------- -------------- ------------- ----------
+      7566 JONES      RESEARCH       DALLAS              2975
+      7698 BLAKE      SALES          CHICAGO             2850
+      7782 CLARK      ACCOUNTING     NEW YORK            2450
+
+
+7 . 사원들의 이름, 부서 이름, 급여를 출력하여라. 
+SQL> select e.ename, d.dname, e.sal
+  2  from emp e, dept d
+  3  where d.deptno = e.deptno;
+
+ENAME      DNAME                 SAL
+---------- -------------- ----------
+CLARK      ACCOUNTING           2450
+KING       ACCOUNTING           5000
+MILLER     ACCOUNTING           1300
+JONES      RESEARCH             2975
+FORD       RESEARCH             3000
+ADAMS      RESEARCH             1100
+SMITH      RESEARCH              800
+SCOTT      RESEARCH             3000
+WARD       SALES                1250
+TURNER     SALES                1500
+ALLEN      SALES                1600
+JAMES      SALES                 950
+BLAKE      SALES                2850
+MARTIN     SALES                1250
+
+14 개의 행이 선택되었습니다.
+
+
+8 . 각 부서별 부서 번호(모든 부서에 대해서), 부서 이름, 부서 위치, 사원의 수를 출력하여라.
+SQL> select d.deptno, d.dname, d.loc, count(e.ename)
+  2  from emp e, dept d
+  3  where e.deptno(+) = d.deptno
+  4  group by d.deptno, d.dname, d.loc;
+
+    DEPTNO DNAME          LOC           COUNT(E.ENAME)
+---------- -------------- ------------- --------------
+        20 RESEARCH       DALLAS                     5
+        40 OPERATIONS     BOSTON                     0
+        10 ACCOUNTING     NEW YORK                   3
+        30 SALES          CHICAGO                    6
+
+
+
+9 . ‘FORD’와 부서가 같은 사원들의 이름, 부서 이름, 직무, 급여를 출력하여라.
+SQL> select e.ename, d.dname, e.job, e.sal
+  2  from emp e, dept d
+  3  where d.deptno = e.deptno and e.job = (
+  4  select job
+  5  from emp
+  6  where ename = 'FORD');
+
+ENAME      DNAME          JOB              SAL
+---------- -------------- --------- ----------
+FORD       RESEARCH       ANALYST         3000
+SCOTT      RESEARCH       ANALYST         3000
+
+
+
+10 . 부서 이름이 ‘SALES’인 사원들의 평균 급여보다 급여가 많고, 부서 이름이 
+‘RESEARCH’인 사원들의 평균 급여보다 급여가 적은 사원들의 이름, 부서 번호, 급여, 직무를 출력하여라.
+SQL> select ename, deptno, sal, job
+  2  from emp
+  3  where sal > (
+  4             select avg(e.sal)
+  5             from emp e, dept d
+  6             where d.dname = 'SALES' and d.deptno = e.deptno) and
+  7  sal < (
+  8             select avg(e.sal)
+  9             from emp e, dept d
+ 10             where d.dname = 'RESEARCH' and d.deptno = e.deptno);
+
+ENAME          DEPTNO        SAL JOB
+---------- ---------- ---------- ---------
+ALLEN              30       1600 SALESMAN
+
+
+11 . 30번 부서의 최고 급여보다 급여가 많은 사원의 사원 번호, 이름, 급여를 출력하여라.
+SQL> select empno, ename, sal
+  2  from emp
+  3  where sal  > (
+  4  select max(sal)
+  5  from emp
+  6  where deptno = 30 );
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7566 JONES            2975
+      7788 SCOTT            3000
+      7839 KING             5000
+      7902 FORD             3000
+
+
+
+
+12 . 10번 부서 사원들의 사원이름과 상사의 이름을 출력하여라.
+SQL> select e1.ename || ' - ' || e2.ename
+  2  from emp e1, emp e2
+  3  where e1.deptno = 10 and e1.mgr = e2.empno;
+
+
+E1.ENAME||'-'||E2.ENAME
+-----------------------
+MILLER - CLARK
+CLARK - KING
+
