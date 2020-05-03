@@ -1,0 +1,663 @@
+
+=============================================================================
+
+7주차 
+1. 실습풀이 (3주)
+2. 실습풀이 (4주)
+3. 실습풀이 (5주)
+4. 실습풀이 (6주)
+
+=============================================================================
+
+< 다양한 풀이 >
+
+#### 3주차 ####
+
+1) 입사일이 81년 이외에 입사한 사원의 모든 정보를 출력하여라.
+SQL> select *
+  2  from emp
+  3  where not hiredate like '81%';
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 80/12/17        800                    20
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                    20
+      7876 ADAMS      CLERK           7788 87/05/23       1100                    20
+      7934 MILLER     CLERK           7782 82/01/23       1300                    10
+
+=> 81년 이외니까 81년만 포함하지 않으면 된다는 의미
+   %년 뒤에 어떤것이 와도 상관없다는 의미
+   hiredate like '81/__/__'; 이런식으로 해도 상관없음
+   
+
+
+6) 이름이 S자로 시작하고 마지막 글자가 T인 사원의 모든 정보를 출력하여라.
+   (단, 이름은 전체 5자리이다.)
+두개의 방법 모두 가능
+
+SQL> select *
+  2  from emp
+  3  where ename like 'S___T';	// _를 이용하여 글자수를 5개로 제한
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                    20
+
+SQL> select *
+  2  from emp
+  3  where ename like 'S%T'	// 글자수에 제한을 두지 않음
+  4  and length(ename) = 5;	// length를 이용하여 글자수를 5개로 제한
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                    20
+
+
+
+9) 부서 번호가 30인 사원들의 모든 정보를 사원번호에 대해 오름차순으로 정렬하여라.
+=> 모든정보를 가져와야하므로 *
+=> 오름차순인 asc는 생략가능
+
+SQL> select *
+  2  from emp
+  3  where deptno = 30
+  4  order by empno asc;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300         30
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500         30
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400         30
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                    30
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0         30
+      7900 JAMES      CLERK           7698 81/12/03        950                    30
+
+6 개의 행이 선택되었습니다.
+
+SQL> select *
+  2  from emp
+  3  where deptno = 30
+  4  order by empno;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300         30
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500         30
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400         30
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                    30
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0         30
+      7900 JAMES      CLERK           7698 81/12/03        950                    30
+
+6 개의 행이 선택되었습니다.
+
+
+
+10) 사원의 모든 정보를 부서번호에 대해 내림차순으로 정렬하고
+    이름에 대해 오름차순으로, 급여에 대해 내림차순으로 정렬하여라.
+
+=> 사원의 모든정보(*)를 검색,
+   정렬은 order by --> deptno에 대해 정렬이 되고,
+                       ename에 대해 정렬이 되고,
+                       sal에 대해 정렬이 된다.
+		       내려가면서 정렬이 되는데 똑같은 값이 있다면
+		       그것에 대해 다시 정렬이 된다.
+
+부서번호 별로 30, 20, 10으로 내림차순으로 정렬이 되고,
+다시 ename으로 정렬, 30번 부서의 ename이 오름차순으로 정렬, sal에 내림차순으로 정렬
+내려가면서 여러번 정렬이 될때 "똑같은 것"이 들어가있다면 다시 정렬해달라는 의미
+ename이 같은 것이 있다면 sal를 정렬해달라는 의미인데 
+ename은 같은 것이 없기 때문에 의미가 없음
+
+
+
+
+
+
+
+
+#### 4주차 ####
+
+2) 급여가 1500부터 3000 사이의 사원에 대해서만 급여의 15% 를
+   회비로 지불하기로 하였다. 
+   조건에 해당되는 사원의 이름, 급여, 회비(소수 이하 2자리까지 반올림)를 출력하여라.
+=> 조건은 급여가 1500 ~ 3000 사이라고 했으니까 또한 between 사용 가능
+=> 급여(sal) * 0.15 또한 소수점 이하 2자리 반올림(round)
+
+SQL> select ename, sal, round(sal*0.15, 2) "회비"
+  2  from emp
+  3  where sal > 1500 and sal < 3000;
+
+ENAME             SAL       회비
+---------- ---------- ----------
+ALLEN            1600        240
+JONES            2975     446.25
+BLAKE            2850      427.5
+CLARK            2450      367.5
+
+
+SQL> select ename, sal, round(sal*0.15, 2) "회비"
+  2  from emp
+  3  where sal between 1500 and 3000;
+
+ENAME             SAL       회비
+---------- ---------- ----------
+ALLEN            1600        240
+JONES            2975     446.25
+BLAKE            2850      427.5
+CLARK            2450      367.5
+SCOTT            3000        450
+TURNER           1500        225
+FORD             3000        450
+
+7 개의 행이 선택되었습니다.
+
+
+=> 두개의 결과는 다름 : betwenn은 1500과 3000도 포함이 되므로
+=> 1500과 3000을 포함시킬거냐 안시킬거냐에 따라에 결정
+=> 원래 사이라는 의미는 포함을 시키지않는다는 의미가 맞는말
+
+
+
+3) 이름의 글자수가 6자 이상인 사원의 이름을 앞에서 
+   3자만 구하여 소문자로 이름만 출력하여라.
+=> 소문자로 lower
+=> substr 앞에서 3글자 -> 1번째글자부터 3개
+=> 글자수를 구하는 함수 length 
+
+SQL> select lower(substr(ename,1, 3))
+  2  from emp
+  3  where length(ename) >= 6;
+
+LOWER(
+------
+mar
+tur
+mil
+
+
+5) 모든 사원에 대해 사원의 이름과 부서 번호를 합성시켜 
+   "연결예제"라는 heading으로 출력하여라.
+
+SQL> select ename || deptno "연결예제"
+  2  from emp;
+
+연결예제
+--------------------------------------------------
+SMITH20
+ALLEN30
+WARD30
+JONES20
+MARTIN30
+BLAKE30
+CLARK10
+SCOTT20
+KING10
+TURNER30
+ADAMS20
+JAMES30
+FORD20
+MILLER10
+
+14 개의 행이 선택되었습니다.
+=> || 를 이용해서 연결가능 
+
+SQL> select concat(ename, deptno) "연결예제"
+  2  from emp;
+
+연결예제
+--------------------------------------------------
+SMITH20
+ALLEN30
+WARD30
+JONES20
+MARTIN30
+BLAKE30
+CLARK10
+SCOTT20
+KING10
+TURNER30
+ADAMS20
+JAMES30
+FORD20
+MILLER10
+
+14 개의 행이 선택되었습니다.
+=> concat이라는 함수를 쓴 예제 : 연결하는 예제
+
+
+*) 날짜에 관련된 예제
+일을 더할 때는 +(더하고자하는 일수) 로 하면 된다.
+입사한 달의 근무 일수를 구할 때는 last_date(hiredate) - hiredate
+다음 요일을 구할 때는 next_day(hiredate, '요일')
+시스템의 날짜를 구할 때는 sysdate
+몇개월 후를 구할 때는 add_months(hiredate, 더할개월)
+짝수를 구하는 함수는 mod(칼람명, 나누는수)
+
+
+
+
+
+
+
+
+#### 5주차 ####
+*) null 인 값도 0으로 하고 싶을 땐 nvl(칼람명,0) 이런식으로 
+   문자로 변경 후 원하는 형식 to_char(칼람명, 원하는형식)
+   => 'L999,999' => 1000단위마다 콤마를 찍고 국가별 화폐 단위표시
+
+
+4) 모든 사원에 대해 사원들의 이름, 급여, 커미션을 급여가 적은 것부터 출력하여라.
+  (단, 커미션이 없는 사원은 'No Commission' 이라는 말이 출력되게 하여라.)
+
+SQL> select ename, sal, nvl(to_char(comm,'999999'),'No Commission') "comm"
+  2  from emp
+  3  order by sal;
+
+ENAME             SAL comm
+---------- ---------- -------------
+SMITH             800 No Commission
+JAMES             950 No Commission
+ADAMS            1100 No Commission
+WARD             1250     500
+MARTIN           1250    1400
+MILLER           1300 No Commission
+TURNER           1500       0
+ALLEN            1600     300
+CLARK            2450 No Commission
+BLAKE            2850 No Commission
+JONES            2975 No Commission
+SCOTT            3000 No Commission
+FORD             3000 No Commission
+KING             5000 No Commission
+
+14 개의 행이 선택되었습니다.
+
+=> 위에 comm은 null이 상당히 많다.
+   comm은 일반적으로 null값을 가지면 다른 값으로 대체하기 위해 nvl 을 사용
+   comm션은 숫자 데이터이고 No Commission으로 하게 되면 문자 데이터 이다.
+   그렇게되면 서로 다른 형식을 가지게 되므로 에러가 발생하게 된다.
+   그래서 반드시 데이터 형식을 문자데이터 형식으로 맞춰줘야하므로
+   문자형식으로 바꿔주는 to_char(칼람명, '999999')기본형식을 사용해야한다.
+   문자형식으로 바꿔준 후 nvl을 이용하면 된다.
+
+SQL> select ename, sal, decode(comm, null, 'No Commission', comm, comm) "comm"
+  2  from emp
+  3  order by sal;
+
+ENAME             SAL comm
+---------- ---------- ----------------------------------------
+SMITH             800 No Commission
+JAMES             950 No Commission
+ADAMS            1100 No Commission
+WARD             1250 500
+MARTIN           1250 1400
+MILLER           1300 No Commission
+TURNER           1500 0
+ALLEN            1600 300
+CLARK            2450 No Commission
+BLAKE            2850 No Commission
+JONES            2975 No Commission
+SCOTT            3000 No Commission
+FORD             3000 No Commission
+KING             5000 No Commission
+
+14 개의 행이 선택되었습니다.
+
+=> decode함수란 경우에 따라 다른 함수 
+   decode(comm, null, 'No Commission', comm, comm)
+   comm이 null인 경우에 No Commission 출력 comm이 그대로 인경우에는 comm 출력
+
+
+5) 'CLERK'은 20%, 'SALESMAN'은 15%, 'ANALYST'는 10%,
+   'MANAGER'는 5%, 'PRESIDENT'는 0%와 같이 업무에 따라 급여 인상을 다르게 할 경우,
+   모든 사원들의 이름, 직무, 급여, 인상 후의 급여를 출력하여라.
+
+SQL> select ename, job, sal, decode(job,'CLERK', sal*1.2,
+  2  'SALESMAN', sal*1.15,
+  3  'ANALYST', sal*1.1,
+  4  'MANAGER', sal*1.05,
+  5  'PRESIDENT', sal) "인상후"
+  6  from emp;
+
+ENAME      JOB              SAL     인상후
+---------- --------- ---------- ----------
+SMITH      CLERK            800        960
+ALLEN      SALESMAN        1600       1840
+WARD       SALESMAN        1250     1437.5
+JONES      MANAGER         2975    3123.75
+MARTIN     SALESMAN        1250     1437.5
+BLAKE      MANAGER         2850     2992.5
+CLARK      MANAGER         2450     2572.5
+SCOTT      ANALYST         3000       3300
+KING       PRESIDENT       5000       5000
+TURNER     SALESMAN        1500       1725
+ADAMS      CLERK           1100       1320
+JAMES      CLERK            950       1140
+FORD       ANALYST         3000       3300
+MILLER     CLERK           1300       1560
+
+14 개의 행이 선택되었습니다.
+
+
+SQL> select ename, job, sal, sal + sal * (case job
+  2  when 'CLERK' then 0.2
+  3  when 'SALESMAN' then 0.15
+  4  when 'ANALYST' then 0.1
+  5  when 'MANAGER' then 0.5
+  6  when 'PRESIDENT' then 0 END) as "인상후 급여"
+  7  from emp;
+
+ENAME      JOB              SAL 인상후 급여
+---------- --------- ---------- -----------
+SMITH      CLERK            800         960
+ALLEN      SALESMAN        1600        1840
+WARD       SALESMAN        1250      1437.5
+JONES      MANAGER         2975      4462.5
+MARTIN     SALESMAN        1250      1437.5
+BLAKE      MANAGER         2850        4275
+CLARK      MANAGER         2450        3675
+SCOTT      ANALYST         3000        3300
+KING       PRESIDENT       5000        5000
+TURNER     SALESMAN        1500        1725
+ADAMS      CLERK           1100        1320
+JAMES      CLERK            950        1140
+FORD       ANALYST         3000        3300
+MILLER     CLERK           1300        1560
+
+14 개의 행이 선택되었습니다.
+
+
+
+6) 모든 사원들의 입사한 년도와 입사한 달을 출력하여라. 
+
+SQL> select to_char(hiredate,'YY/MM') "hire"
+  2  from emp;
+
+hire
+-----
+80/12
+81/02
+81/02
+81/04
+81/09
+81/05
+81/06
+87/04
+81/11
+81/09
+87/05
+81/12
+81/12
+82/01
+
+14 개의 행이 선택되었습니다.
+
+
+SQL> select to_char(hiredate,'yyyy') "년도", to_char(hiredate,'month') "입사달"
+  2  from emp;
+
+년도 입사달
+---- ------
+1980 12월
+1981 2월
+1981 2월
+1981 4월
+1981 9월
+1981 5월
+1981 6월
+1987 4월
+1981 11월
+1981 9월
+1987 5월
+1981 12월
+1981 12월
+1982 1월
+
+14 개의 행이 선택되었습니다.
+
+
+
+8) 각 부서별 같은 직무를 갖는 사원의 인원수를 구하여 부서번호, 직무, 인원수를 출력하여라.
+
+SQL> select deptno, job, count(*)
+  2  from emp
+  3  group by deptno, job
+  4  order by deptno;
+
+    DEPTNO JOB         COUNT(*)
+---------- --------- ----------
+        10 CLERK              1
+        10 MANAGER            1
+        10 PRESIDENT          1
+        20 ANALYST            2
+        20 CLERK              2
+        20 MANAGER            1
+        30 CLERK              1
+        30 MANAGER            1
+        30 SALESMAN           4
+
+9 개의 행이 선택되었습니다.
+
+=> count라는 복수행 함수를 사용하였으므로 
+   group by에 복수행 함수를 제외한 나머지 칼람이 와야함
+   부서별 같은 직무라고 했으니 deptno, job으로 오고
+   만약 직무별 부서라고 하면 job, deptno 로 와야함
+   order by를 요구하지 않았지만 보기 편하게 하기 위해 정렬시킴
+
+
+9) 사원들의 직무별 평균급여와 최고급여, 최저급여를 평균급여에 대해 오름차순으로 정렬하여라.
+
+SQL> select avg(sal), max(sal), min(sal)
+  2  from emp
+  3  group by job
+  4  order by avg(sal) ;
+
+  AVG(SAL)   MAX(SAL)   MIN(SAL)
+---------- ---------- ----------
+    1037.5       1300        800
+      1400       1600       1250
+2758.33333       2975       2450
+      3000       3000       3000
+      5000       5000       5000
+
+=> select에 일반칼람이 나온 것이 아니라 반드시 group by에 job이 와야하는건 아니지만
+   문제를 보면 직무별로 나눠달라고 했으니까 나와야한다.
+   어떤 직무가 무엇인지 모르니까 가능하면 밑에 구문처럼 해주는 것이 좋음
+   물론 앞의 구문이 틀린 것은 아님
+
+SQL> select job, avg(sal), max(sal), min(sal)
+  2  from emp
+  3  group by job
+  4  order by avg(sal) ;
+
+JOB         AVG(SAL)   MAX(SAL)   MIN(SAL)
+--------- ---------- ---------- ----------
+CLERK         1037.5       1300        800
+SALESMAN        1400       1600       1250
+MANAGER   2758.33333       2975       2450
+ANALYST         3000       3000       3000
+PRESIDENT       5000       5000       5000
+
+
+
+12) 평균 급여가 1500이 넘는 직무와 평균 급여를 구하여라.
+
+SQL> select job, avg(sal)
+  2  from emp
+  3  group by job
+  4  having avg(sal) > 1500;
+
+JOB         AVG(SAL)
+--------- ----------
+PRESIDENT       5000
+MANAGER   2758.33333
+ANALYST         3000
+
+=> select절에서 일반함수와 복수행함수가 같이 사용이 되었으므로 
+   무조건 group by에 일반함수가 나와야한다.
+   또한 넘는 이면 1500을 포함하지 않는다는 개념
+   group by가 나온다면 where절에 넣지 못함
+
+
+
+
+
+
+
+
+#### 6주차 ####
+
+*) 테이블을 조인할 때는 무조건 where절에 emp.deptno = dept.deptno가 들어가야한다.
+   from절에서 테이블이 두개 사용되면 조인조건을 넣어줘야한다.
+   조인조건이란 ? 테이블이 어떻게 조인되는지를 알려주는 조건
+   --> 서로 같은 것을 연결   
+
+   
+2) 이름이 'ALLEN'인 사원의 부서 이름을 출력하여라.
+
+SQL> select d.dname
+  2  from emp e, dept d
+  3  where e.deptno = d.deptno and e.ename = 'ALLEN';
+
+DNAME
+--------------
+SALES
+=> ename을 찾아야하므로 emp테이블도 같이 들어간 구문
+
+SQL> select dname
+  2  from dept
+  3  where deptno = (select deptno from emp where ename = 'ALLEN');
+
+DNAME
+--------------
+SALES
+=> where절에서 emp테이블이 들어간 예제 --> 서브쿼리를 사용한 예제
+
+
+4) 전체 사원의 평균 급여보다 급여가 많은 사원의 사원 번호, 이름, 
+   부서 이름, 입사일, 부서 위치, 급여를 출력하여라.
+
+SQL> select e.empno, e.ename, d.dname, e.hiredate, d.loc, e.sal
+  2  from emp e, dept d
+  3  where e.deptno = d.deptno and
+  4  sal > (select avg(sal)
+  5             from emp);
+
+     EMPNO ENAME      DNAME          HIREDATE LOC                  SAL
+---------- ---------- -------------- -------- ------------- ----------
+      7566 JONES      RESEARCH       81/04/02 DALLAS              2975
+      7698 BLAKE      SALES          81/05/01 CHICAGO             2850
+      7782 CLARK      ACCOUNTING     81/06/09 NEW YORK            2450
+      7788 SCOTT      RESEARCH       87/04/19 DALLAS              3000
+      7839 KING       ACCOUNTING     81/11/17 NEW YORK            5000
+      7902 FORD       RESEARCH       81/12/03 DALLAS              3000
+
+6 개의 행이 선택되었습니다.
+
+=> 조인조건은 무조건 들어가야함
+   전체사원의 평균 급여보다 급여가 많은 --> sal 가 많은 것을 찾는다는 의미
+   sal > 라는 의미 
+   전체 사원의 평균 급여를 모르므로 다시 구해야하므로 select문 사용
+   
+
+5) 10번 부서 사원들 중에서 20번 부서의 사원과 같은 직무를 갖는
+   사원의 사원 번호, 이름, 부서 이름, 입사일, 부서 위치를 출력하여라.
+
+SQL> select e.empno, e.ename, d.dname, e.hiredate, d.loc
+  2  from emp e, dept d
+  3  where e.deptno = d.deptno and
+  4             e.deptno = 10 and
+  5             e.job in (select job
+  6                     from emp
+  7                     where deptno = 20);
+
+     EMPNO ENAME      DNAME          HIREDATE LOC
+---------- ---------- -------------- -------- -------------
+      7934 MILLER     ACCOUNTING     82/01/23 NEW YORK
+      7782 CLARK      ACCOUNTING     81/06/09 NEW YORK
+
+=> deptno 는 dept 테이블에도 있고 emp 테이블에도 있다.
+   반드시 where문장에서는 e. d.이 들어가는 것이 좋다.
+   첫번째 조건을 만족한 후  e.deptno = 10 and
+   두번째 조건은 직무를 모르므로 찾아야하는 20번부서의 사원과 부서가 같아야하는데
+   select 절을 사용해야한다.
+   근데 일반적으로 = 이 아니고 서브쿼리로 사용했을 경우에 
+   반드시 서브쿼리에 가져오는 데이터가 한개인지 여러개인지 따져야함
+   위와 같은 경우는 여러개의 job이 나오므로 = 이 아니고 in으로 들어가야한다.
+
+
+
+8) 각 부서별 부서 번호(모든 부서에 대해서), 부서 이름, 부서 위치, 
+   사원의 수를 출력하여라.
+
+SQL> select d.deptno, d.dname, d.loc, count(e.ename)
+  2  from emp e, dept d
+  3  where e.deptno (+)= d.deptno
+  4  group by d.deptno, d.dname, d.loc;
+
+    DEPTNO DNAME          LOC           COUNT(E.ENAME)
+---------- -------------- ------------- --------------
+        20 RESEARCH       DALLAS                     5
+        40 OPERATIONS     BOSTON                     0
+        10 ACCOUNTING     NEW YORK                   3
+        30 SALES          CHICAGO                    6
+=> 모든 부서에 대해서 라는 말이 있으므로 외부 조인에 해당 
+   그러므로 (+)가 들어가야함.
+   
+
+SQL> select d.deptno, d.dname, d.loc, count(e.ename)
+  2  from emp e, dept d
+  3  where e.deptno (+)= d.deptno
+  4  group by d.deptno, d.dname, d.loc
+  5  order by d.deptno;
+
+    DEPTNO DNAME          LOC           COUNT(E.ENAME)
+---------- -------------- ------------- --------------
+        10 ACCOUNTING     NEW YORK                   3
+        20 RESEARCH       DALLAS                     5
+        30 SALES          CHICAGO                    6
+        40 OPERATIONS     BOSTON                     0
+=> 정렬한 예
+
+
+11) 30번 부서의 최고 급여보다 급여가 많은 사원의 사원 번호,
+    이름, 급여를 출력하여라.
+
+SQL> select empno, ename, sal
+  2  from emp
+  3  where sal > (select max(sal)
+  4                     from emp
+  5                     where deptno = 30);
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7566 JONES            2975
+      7788 SCOTT            3000
+      7839 KING             5000
+      7902 FORD             3000
+
+
+12) 10번 부서 사원들의 사원이름과 상사의 이름을 출력하여라.
+
+SQL> select e1.ename"사원", e2.ename "상사"
+  2  from emp e1, emp e2
+  3  where e1.mgr = e2.empno
+  4  and e1.deptno = 10;
+
+사원       상사
+---------- ----------
+MILLER     CLARK
+CLARK      KING
+
+=> 책의 셀프조인과 같은 내용
+   사원이름과 상사의 이름은 
+   ename 	   ename
+   둘다 emp 테이블의 ename 
+   상사의 이름은 직접적으로 없지만 mgr에 상사의 번호가 있다.
+   상사의 번호를 찾아서 이름을 찾으면 된다.
+   사원의 이름은 e1에서 상사의 이름은 e2에서 가져오면 된다.
+   e1의 상사번호와 e2의 사원의 번호와 같은지 확인
+   또한 10번 부서의 사원만 찾으라고 했으니 e1.deptno = 10
+
+
+
