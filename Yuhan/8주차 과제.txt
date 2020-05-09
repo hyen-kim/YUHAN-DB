@@ -1,0 +1,120 @@
+
+========================================================================================================
+
+						DB 응용
+										학번 : 201907033
+										이름 : 김혜인
+										제출일 : 20/05/08
+
+========================================================================================================
+
+
+1) 칼럼레벨과 테이블 레벨로 테이블을 각각 생성하여라.
+
+1. 테이블 이름 : DEPT학번c(칼럼 레벨)
+SQL> CREATE TABLE DEPT201907033c
+  2  (no NUMBER(7) CONSTRAINT DEPT201907033c_no_pk PRIMARY KEY,
+  3  name VARCHAR(25));
+
+테이블이 생성되었습니다.
+
+
+2. 테이블 이름 : DEPT학번t(테이블 레벨)
+SQL> CREATE TABLE DEPT201907033t
+  2  (no NUMBER(7),
+  3  name VARCHAR(25),
+  4  CONSTRAINT DEPT201907033t_no_pk PRIMARY KEY(no));
+
+테이블이 생성되었습니다.
+
+
+3. 테이블 이름: EMP학번c(칼럼 레벨)
+SQL> CREATE TABLE EMP201907033c
+  2  (id NUMBER(7) CONSTRAINT EMP201907033c_id_pk PRIMARY KEY,
+  3  lname VARCHAR2(25) CONSTRAINT EMP201907033c_lname_nn NOT NULL,
+  4  fname VARCHAR2(25),
+  5  deptid NUMBER(7) CONSTRAINT EMP201907033c_deptid_nn NOT NULL
+  6                     CONSTRAINT EMP201907033c_deptid_fk REFERENCES DEPT201907033c(NO));
+
+테이블이 생성되었습니다.
+
+
+4. 테이블 이름 : EMP학번t(테이블 레벨)
+SQL> CREATE TABLE EMP201907033t
+  2  (id NUMBER(7),
+  3  lname VARCHAR(25) CONSTRAINT EMP201907033t_lname_nn NOT NULL,
+  4  fname VARCHAR(25),
+  5  deptid NUMBER(7) CONSTRAINT EMP201907033t_deptid_nn NOT NULL,
+  6  CONSTRAINT EMP201907033t_id_pk PRIMARY KEY(id),
+  7  CONSTRAINT EMP201907033t_deptid_fk FOREIGN KEY(deptid) REFERENCES DEPT201907033t(NO));
+
+테이블이 생성되었습니다.
+
+
+
+
+
+2) 위에서 생성한 테이블들의 구조를 확인하여라.
+
+1. 테이블 이름 : DEPT학번c(칼럼 레벨)
+SQL> desc DEPT201907033c
+ 이름                                                              널?      유형
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ NO                                                                NOT NULL NUMBER(7)
+ NAME                                                                       VARCHAR2(25)
+
+2. 테이블 이름 : DEPT학번t(테이블 레벨)
+SQL> desc DEPT201907033t
+ 이름                                                              널?      유형
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ NO                                                                NOT NULL NUMBER(7)
+ NAME                                                                       VARCHAR2(25)
+
+3. 테이블 이름: EMP학번c(칼럼 레벨)
+SQL> desc EMP201907033c
+ 이름                                                              널?      유형
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ ID                                                                NOT NULL NUMBER(7)
+ LNAME                                                             NOT NULL VARCHAR2(25)
+ FNAME                                                                      VARCHAR2(25)
+ DEPTID                                                            NOT NULL NUMBER(7)
+
+4. 테이블 이름 : EMP학번t(테이블 레벨)
+SQL> desc EMP201907033t
+ 이름                                                              널?      유형
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ ID                                                                NOT NULL NUMBER(7)
+ LNAME                                                             NOT NULL VARCHAR2(25)
+ FNAME                                                                      VARCHAR2(25)
+ DEPTID                                                            NOT NULL NUMBER(7)
+
+
+
+3) 위에서 생성한 테이블의 데이터를 확인하여라.
+
+
+1. 테이블 이름 : DEPT학번c(칼럼 레벨)
+SQL> select *
+  2  from DEPT201907033c;
+
+선택된 레코드가 없습니다.
+
+2. 테이블 이름 : DEPT학번t(테이블 레벨)
+SQL> select *
+  2  from DEPT201907033t;
+
+선택된 레코드가 없습니다.
+
+3. 테이블 이름: EMP학번c(칼럼 레벨)
+SQL> select *
+  2  from EMP201907033c;
+
+선택된 레코드가 없습니다.
+
+4. 테이블 이름 : EMP학번t(테이블 레벨)
+SQL> select *
+  2  from EMP201907033t;
+
+선택된 레코드가 없습니다.
+
+
