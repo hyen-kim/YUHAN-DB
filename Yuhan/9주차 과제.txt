@@ -1,0 +1,76 @@
+1.데이터 사전을 이용해서 8주차에 생성한 EMP학번c, EMP학번t, DEPT학번c, DEPT학번t 
+테이블에 대해 테이블명, 칼럼명, 제약조건명, 제약조건유형을 검색하여라. 
+(4개의 테이블에 대해서만 한 개의 SQL문에 표시하여라.)
+
+SQL> select uc.table_name, ucc.column_name, uc.constraint_name, uc.constraint_type
+  2  from user_constraints uc, user_cons_columns ucc
+  3  where uc.constraint_name = ucc.constraint_name and
+  4  uc.table_name in ('EMP201907033C', 'EMP201907033T', 'DEPT201907033C', 'DEPT201907033T');
+
+TABLE_NAME
+------------------------------
+COLUMN_NAME
+------------------------------------------------------------------------------------------------------------------------
+CONSTRAINT_NAME                C
+------------------------------ -
+DEPT201907033C
+NO
+DEPT201907033C_NO_PK           P
+
+DEPT201907033T
+NO
+DEPT201907033T_NO_PK           P
+
+EMP201907033C
+LNAME
+EMP201907033C_LNAME_NN         C
+
+EMP201907033C
+DEPTID
+EMP201907033C_DEPTID_NN        C
+
+EMP201907033C
+
+TABLE_NAME
+------------------------------
+COLUMN_NAME
+------------------------------------------------------------------------------------------------------------------------
+CONSTRAINT_NAME                C
+------------------------------ -
+ID
+EMP201907033C_ID_PK            P
+
+EMP201907033C
+DEPTID
+EMP201907033C_DEPTID_FK        R
+
+EMP201907033T
+LNAME
+EMP201907033T_LNAME_NN         C
+
+EMP201907033T
+DEPTID
+EMP201907033T_DEPTID_NN        C
+
+EMP201907033T
+ID
+
+TABLE_NAME
+------------------------------
+COLUMN_NAME
+------------------------------------------------------------------------------------------------------------------------
+CONSTRAINT_NAME                C
+------------------------------ -
+EMP201907033T_ID_PK            P
+
+EMP201907033T
+DEPTID
+EMP201907033T_DEPTID_FK        R
+
+
+10 개의 행이 선택되었습니다.
+
+
+
+
+
