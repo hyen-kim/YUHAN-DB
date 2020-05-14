@@ -1,0 +1,204 @@
+
+=============================================================================
+
+9주차 
+
+1. 실습풀이 (8주)
+
+2. 데이터 사전
+
+=============================================================================
+
+1. 실습풀이 (8주)
+다음 테이블을 생성, 구조 확인, 데이터 확인
+EMP학번c(칼럼 레벨)			DEPT학번c(칼럼 레벨)
+EMP학번t(테이블 레벨)			DEPT학번t(테이블 레벨)
+
+
+== 테이블 생성 (칼럼 레벨) ==
+- 모든 제약조건이 칼럼 하나가 끝나기전에 설명하고 콤마를 찍는 방식
+- primary key는 not null, uk를 포함
+
+* 부모테이블 먼저 생성
+① DEPT학번c(칼럼 레벨)			--> 부모 테이블
+CREATE TABLE DEPT201907033c(
+	no NUMBER(7) CONSTRAINT dept201907033c_no_pk PRIMARY KEY,
+	name VARCHAR2(25)
+);
+
+② EMP학번c(칼럼 레벨)			--> 자식 테이블
+CREATE TABLE EMP201907033c(
+	id NUMBER(7) CONSTRAINT emp201907033c_id_pk PRIMARY KEY,
+	lname VARCHAR2(25) CONSTRAINT emp201907033c_lname_nn NOT NULL,
+	fname VARCHAR2(25),
+	deptid NUMBER(7) CONSTRAINT emp201907033c_deptid_nn NOT NULL
+			CONSTRAINT emp201907033c_deptid_fk REFERENCES dept201907033c(no)	
+);
+
+== 테이블 구조 확인, 데이터 확인 ==
+① 
+SQL> desc EMP201907033c
+SQL> select *
+  2  from EMP201907033c;
+
+② 
+SQL> desc DEPT201907033c 
+SQL> select *
+  2  from DEPT201907033c;
+
+
+
+
+== 테이블 생성 (테이블 레벨) ==
+① DEPT학번t(칼럼 레벨)				--> 부모 테이블
+CREATE TABLE DEPT201907033t(
+	no NUMBER(7),
+	name VARCHAR2(25),
+	CONSTRAINT dept201907033t_no_pk PRIMARY KEY(id)
+);
+
+② EMP학번t(칼럼 레벨)	
+CREATE TABLE EMP201907033t(			--> 자식 테이블
+	id NUMBER(7),
+	lname VARCHAR(25) CONSTRAINT emp201907033t_lname_nn NOT NULL,
+	fname VARCHAR(25),
+	deptno NUMBER(7) CONSTRAINT emp201907033t_deptno_nn NOT NULL,
+	CONSTRAINT emp201907033t_id_pk PRIMARY KEY(id),
+	CONSTRAINT emp201907033t_deptno_fk FOREIGN KEY(deptid) REFERENCES dept201907033t(no)
+);
+
+== 테이블 구조 확인, 데이터 확인 ==
+① 
+SQL> desc EMP201907033t
+SQL> select *
+  2  from EMP201907033t;
+
+② 
+SQL> desc DEPT201907033t 
+SQL> select *
+  2  from DEPT201907033t;
+
+
+
+
+
+
+
+
+2. 오라클 데이터 사전
+- 오라클 서버에 의해 자동으로 생성되고 관리되는 시스템 테이블의 집합
+- 뷰라는 형태로 제공
+- SELECT 문을 이용해서 데이터 사전의 내용을 검색 
+
+* DICTIONARY 
+- 객체에 관한 정보 확인
+- (예제) DICTIONARY 데이터 사전의 구조를 확인하여라.
+SQL> desc dictionary
+ 이름                                                              널?      유형
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ TABLE_NAME                                                                 VARCHAR2(30)
+ COMMENTS                                                                   VARCHAR2(4000)
+
+- (예제) DICTIONARY 데이터 사전의 내용을 검색하여라.
+SQL> select *
+  2  from dictionary;
+835 개의 행이 선택되었습니다.
+
+
+
+* 데이터 사전의 종류
+- USER_
+1) user_objects
+SQL> select *
+  2  from user_objects;
+
+OBJECT_NAME
+------------------------------------------------------------------------------------------------------------------------
+SUBOBJECT_NAME                  OBJECT_ID DATA_OBJECT_ID OBJECT_TYPE         CREATED  LAST_DDL TIMESTAMP
+------------------------------ ---------- -------------- ------------------- -------- -------- -------------------
+STATUS  T G S  NAMESPACE EDITION_NAME
+------- - - - ---------- ------------------------------
+PK_DEPT
+                                    73195          73195 INDEX               10/03/30 10/03/30 2010-03-30:11:06:23
+VALID   N N N          4
+
+DEPT
+                                    73194          73194 TABLE               10/03/30 10/03/30 2010-03-30:11:06:23
+VALID   N N N          1
+
+EMP
+                                    73196          73196 TABLE               10/03/30 10/03/30 2010-03-30:11:06:23
+VALID   N N N          1
+
+PK_EMP
+                                    73197          73197 INDEX               10/03/30 10/03/30 2010-03-30:11:06:23
+VALID   N N N          4
+
+BONUS
+
+OBJECT_NAME
+------------------------------------------------------------------------------------------------------------------------
+SUBOBJECT_NAME                  OBJECT_ID DATA_OBJECT_ID OBJECT_TYPE         CREATED  LAST_DDL TIMESTAMP
+------------------------------ ---------- -------------- ------------------- -------- -------- -------------------
+STATUS  T G S  NAMESPACE EDITION_NAME
+------- - - - ---------- ------------------------------
+                                    73198          73198 TABLE               10/03/30 10/03/30 2010-03-30:11:06:23
+VALID   N N N          1
+
+SALGRADE
+                                    73199          73199 TABLE               10/03/30 10/03/30 2010-03-30:11:06:23
+VALID   N N N          1
+
+DEPT201907033C
+                                    75510          75510 TABLE               20/05/08 20/05/08 2020-05-08:18:01:00
+VALID   N N N          1
+
+DEPT201907033C_NO_PK
+                                    75511          75511 INDEX               20/05/08 20/05/08 2020-05-08:18:01:00
+VALID   N N N          4
+
+DEPT201907033T
+                                    75512          75512 TABLE               20/05/08 20/05/08 2020-05-08:18:03:48
+
+OBJECT_NAME
+------------------------------------------------------------------------------------------------------------------------
+SUBOBJECT_NAME                  OBJECT_ID DATA_OBJECT_ID OBJECT_TYPE         CREATED  LAST_DDL TIMESTAMP
+------------------------------ ---------- -------------- ------------------- -------- -------- -------------------
+STATUS  T G S  NAMESPACE EDITION_NAME
+------- - - - ---------- ------------------------------
+VALID   N N N          1
+
+DEPT201907033T_NO_PK
+                                    75513          75513 INDEX               20/05/08 20/05/08 2020-05-08:18:03:48
+VALID   N N N          4
+
+EMP201907033C
+                                    75514          75514 TABLE               20/05/08 20/05/08 2020-05-08:18:04:46
+VALID   N N N          1
+
+EMP201907033C_ID_PK
+                                    75515          75515 INDEX               20/05/08 20/05/08 2020-05-08:18:04:46
+VALID   N N N          4
+
+EMP201907033T
+                                    75516          75516 TABLE               20/05/08 20/05/08 2020-05-08:18:12:17
+VALID   N N N          1
+
+OBJECT_NAME
+------------------------------------------------------------------------------------------------------------------------
+SUBOBJECT_NAME                  OBJECT_ID DATA_OBJECT_ID OBJECT_TYPE         CREATED  LAST_DDL TIMESTAMP
+------------------------------ ---------- -------------- ------------------- -------- -------- -------------------
+STATUS  T G S  NAMESPACE EDITION_NAME
+------- - - - ---------- ------------------------------
+
+EMP201907033T_ID_PK
+                                    75517          75517 INDEX               20/05/08 20/05/08 2020-05-08:18:12:17
+VALID   N N N          4
+
+
+14 개의 행이 선택되었습니다.
+
+- ALL_
+- DBA_
+
+
