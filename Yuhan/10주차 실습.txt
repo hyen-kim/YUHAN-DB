@@ -1,0 +1,100 @@
+
+============================================================================
+
+DB응용
+
+============================================================================
+
+예제1) emp1의 테이블에 job 이라는 칼람 추가
+SQL> desc emp1
+ERROR:
+ORA-04043: emp1 객체는 존재하지 않습니다.
+
+SQL> create table emp1 (
+  2  empno number(4),
+  3  ename varchar2(20),
+  4  sal number(8,2),
+  5  hiredate date);
+
+테이블이 생성되었습니다.
+
+SQL> desc emp1
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(20)
+ SAL                                                NUMBER(8,2)
+ HIREDATE                                           DATE
+
+SQL> alter table emp1
+  2  add job varchar(20);
+
+테이블이 변경되었습니다.
+
+SQL> desc emp1
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(20)
+ SAL                                                NUMBER(8,2)
+ HIREDATE                                           DATE
+ JOB                                                VARCHAR2(20)
+
+SQL> alter table emp1
+  2  add deptno number(2) constraint emp1_deptno_nn not null;
+
+테이블이 변경되었습니다.
+
+SQL> desc emp1
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(20)
+ SAL                                                NUMBER(8,2)
+ HIREDATE                                           DATE
+ JOB                                                VARCHAR2(20)
+ DEPTNO                                    NOT NULL NUMBER(2)
+
+
+예제2) 기존의 칼람 변경
+SQL> alter table emp1
+  2  modify job varchar2(10) constraint emp1_job_nn not null;
+
+테이블이 변경되었습니다.
+
+SQL> alter table emp1
+  2  modify empno char(10);
+
+테이블이 변경되었습니다.
+
+SQL> desc emp1
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              CHAR(10)
+ ENAME                                              VARCHAR2(20)
+ SAL                                                NUMBER(8,2)
+ HIREDATE                                           DATE
+ JOB                                       NOT NULL VARCHAR2(10)
+ DEPTNO                                    NOT NULL NUMBER(2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
