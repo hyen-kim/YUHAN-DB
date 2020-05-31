@@ -175,6 +175,19 @@ SQL> select *
     종료를 해버리면 반영이 제대로 일어나지 않음
 
 
+* 비정상 종료 후 로그인하여도 데이터가 손상되지 않음
+SQL> insert into deptcopy
+  2  values(50, 'EDUCATION', 'SEOUL');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> commit;
+
+커밋이 완료되었습니다.
+
+
+
+
 
 
 
