@@ -1,0 +1,180 @@
+
+============================================================================
+
+DB응용
+
+============================================================================
+
+01. 치환변수
+치환변수의 정의
+- 일시적으로 값을 저장하기 위해 치환변수 사용
+
+치환변수의 종류
+- 단일 앰퍼샌드 (&) 치환변수
+- 이중 앰퍼샌드 (&&) 치환변수
+
+
+예제1) 단일 앰퍼샌드 (&) 치환변수
+       EMP 테이블에서 부서 번호의 값을 실행시킬 때마다 입력 받아서
+       20번 부서, 30번 부서의 사원 번호, 사원 이름, 급여를 각각 출력하여라.
+
+SQL> select empno, ename, sal
+  2  from emp
+  3  where deptno = &no;
+no의 값을 입력하십시오: 20
+구   3: where deptno = &no
+신   3: where deptno = 20
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7369 SMITH             800
+      7566 JONES            2975
+      7788 SCOTT            3000
+      7876 ADAMS            1100
+      7902 FORD             3000
+
+SQL> /
+no의 값을 입력하십시오: 30
+구   3: where deptno = &no
+신   3: where deptno = 30
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7499 ALLEN            1600
+      7521 WARD             1250
+      7654 MARTIN           1250
+      7698 BLAKE            2850
+      7844 TURNER           1500
+      7900 JAMES             950
+
+6 개의 행이 선택되었습니다.
+
+/ : 바로전에 사용했던 sql 구문을 실행하겠다는 의미
+
+
+
+
+
+예제2) 시스템변수 VERIFY의 기본값을 OFF로 변경 후 위의 예제 다시 
+SQL> set verify off
+SQL> /
+no의 값을 입력하십시오: 20
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7369 SMITH             800
+      7566 JONES            2975
+      7788 SCOTT            3000
+      7876 ADAMS            1100
+      7902 FORD             3000
+
+SQL> /
+no의 값을 입력하십시오: 30
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7499 ALLEN            1600
+      7521 WARD             1250
+      7654 MARTIN           1250
+      7698 BLAKE            2850
+      7844 TURNER           1500
+      7900 JAMES             950
+
+6 개의 행이 선택되었습니다.
+
+
+
+
+
+
+예제3) 실행시킬 때 직무의 값을 입력 받아서 직무가 SALESMAN인 
+       사원의 사원 번호, 사원 이름, 급여를 출력하여라.
+SQL> select empno, ename, sal
+  2  from emp
+  3  where job = '&job_title'; 
+job_title의 값을 입력하십시오: SALESMAN
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7499 ALLEN            1600
+      7521 WARD             1250
+      7654 MARTIN           1250
+      7844 TURNER           1500
+
+
+
+
+
+
+예제4) 검색하고자 하는 칼럼명과 조건에 치환변수를 사용하는 경우의
+       SQL 문을 작성하여라.
+SQL> select empno, &bb
+  2  from emp
+  3  where &eondition;
+bb의 값을 입력하십시오: deptno
+eondition의 값을 입력하십시오: deptno = 30
+
+     EMPNO     DEPTNO
+---------- ----------
+      7499         30
+      7521         30
+      7654         30
+      7698         30
+      7844         30
+      7900         30
+
+6 개의 행이 선택되었습니다.
+
+
+
+
+
+
+< 트랜젝션 >
+(예제) deptcopy 테이블 생성
+SQL> create table deptcopy
+  2  as
+  3  select *
+  4  from dept;
+
+테이블이 생성되었습니다.
+
+
+* 생성후 DML 명령 실행
+SQL> insert into deptcopy
+  2  values(50, 'EDUCATION', 'SEOUL');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select *
+  2  from deptcopy;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 EDUCATION      SEOUL
+
+* 비정상 종료 후 로그인하여 데이터 확인
+SQL> select *
+  2  from deptcopy;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+
+--> 분명 데이터가 있는 것을 확인 하였는데 
+    데이터 50번이 들어가있지 않다는 것이 보임
+    DML 명령은 insert를 했다고 해도 
+    DB에 곧바로 반영이 되는 것이 아니므로 
+    종료를 해버리면 반영이 제대로 일어나지 않음
+
+
+
+
+
