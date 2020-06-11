@@ -8,8 +8,15 @@
 
 =========================================================================
 
+( 예제 ) empcopy 테이블과 deptcopy 테이블로부터 사원번호, 사원명, 부서번호,
+         부서명에 대한 뷰 emp_dept_view를 만들어라.
+SQL> create view emp_dept_view
+  2  as
+  3  select e.empno, e.ename, e.deptno, d.dname
+  4  from empcopy e, deptcopy d
+  5  where e.deptno = d.deptno;
 
-
+뷰가 생성되었습니다.
 
 
 
